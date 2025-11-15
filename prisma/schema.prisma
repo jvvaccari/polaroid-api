@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Polaroid {
+  id              String           @id @map("_id") @db.ObjectId
+  imageUrl        String
+  backContent     String
+  keyNumber       Int              @unique
+  position        Int?             @unique
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  dailyChallenges DailyChallenge[]
+
+  @@map("polaroids")
+}
+
+model DailyChallenge {
+  id          String    @id @map("_id") @db.ObjectId
+  date        DateTime  @unique
+  polaroid    Polaroid  @relation(fields: [polaroidId], references: [id])
+  polaroidId  String    @db.ObjectId
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+  attempts    Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("daily_challenges")
+}
