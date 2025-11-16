@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
+import { PolaroidModule } from './modules/polaroid/polaroid.module';
 
 @Module({
-  imports: [],
-  controllers: [],
-  providers: [],
+  imports: [PolaroidModule],
 })
 export class AppModule {}
