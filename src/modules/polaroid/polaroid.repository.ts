@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Polaroid, Prisma } from '@prisma/client';
 import { IRepository } from 'src/common/interface.repository';
 import { PrismaRepository } from 'src/prisma/prisma.repository';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PolaroidRepository
@@ -14,16 +13,14 @@ export class PolaroidRepository
       Prisma.PolaroidUpdateInput
     >
 {
-  private readonly inner: PrismaRepository<
-    Polaroid,
-    Prisma.PolaroidWhereUniqueInput,
-    Prisma.PolaroidCreateInput,
-    Prisma.PolaroidUpdateInput
-  >;
-
-  constructor(prisma: PrismaService) {
-    this.inner = new PrismaRepository(prisma.polaroid);
-  }
+  constructor(
+    protected readonly inner: PrismaRepository<
+      Polaroid,
+      Prisma.PolaroidWhereUniqueInput,
+      Prisma.PolaroidCreateInput,
+      Prisma.PolaroidUpdateInput
+    >,
+  ) {}
 
   async findAll(): Promise<Polaroid[]> {
     return this.inner.findAll();
