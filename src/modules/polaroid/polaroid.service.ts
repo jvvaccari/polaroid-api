@@ -37,7 +37,7 @@ export class PolaroidService {
       position: (await this.polaroidRepository.count()) + 1,
       isActive: true,
       backContent: dto.backContent,
-      keyNumber: dto.keyNumber,
+      keyNumber: dto.keyNumber || null,
       imageUrl,
     };
     return this.polaroidRepository.create(data);

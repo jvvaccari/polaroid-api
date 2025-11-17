@@ -16,7 +16,7 @@ export class PolaroidResponseDto {
     example: 123,
   })
   @IsInt()
-  keyNumber: number;
+  keyNumber: number | null;
 
   @ApiProperty({
     description: 'Posição do polaroid',
