@@ -1,20 +1,37 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsInt } from 'class-validator';
 
 export class PolaroidResponseDto {
   @ApiProperty({ description: 'ID do polaroid' })
   id: string;
 
-  @ApiProperty({ description: 'Título do polaroid' })
-  title: string;
-
-  @ApiPropertyOptional({ description: 'Descrição do polaroid' })
-  description?: string;
-
   @ApiProperty({ description: 'URL da imagem' })
   imageUrl: string;
 
-  @ApiPropertyOptional({ description: 'Data em que a foto foi tirada' })
-  takenAt?: Date;
+  @ApiProperty({ description: 'Conteúdo do verso do polaroid' })
+  backContent: string;
+
+  @ApiProperty({
+    description: 'Número chave do polaroid',
+    example: 123,
+  })
+  @IsInt()
+  keyNumber: number;
+
+  @ApiProperty({
+    description: 'Posição do polaroid',
+    example: 1,
+  })
+  @IsInt()
+  position: number | null;
+
+  @ApiProperty({
+    description: 'Se o polaroid está ativo',
+    default: true,
+    example: true,
+  })
+  @IsBoolean()
+  isActive: boolean;
 
   @ApiProperty({ description: 'Data de criação' })
   createdAt: Date;

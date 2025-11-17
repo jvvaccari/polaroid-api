@@ -5,11 +5,13 @@ import { PolaroidRepository } from './polaroid.repository';
 import { PrismaModule } from '../../prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaRepository } from 'src/prisma/prisma.repository';
+import { PolaroidMapper } from './polaroid.mapper';
 
 @Module({
   imports: [PrismaModule],
   controllers: [PolaroidController],
   providers: [
+    PolaroidMapper,
     {
       provide: PolaroidRepository,
       useFactory: (prisma: PrismaService) => {

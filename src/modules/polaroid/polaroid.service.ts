@@ -4,6 +4,7 @@ import type { IRepository } from 'src/common/interface.repository';
 import { CreatePolaroidDto } from './dto/create-polaroid.dto';
 import { UpdatePolaroidDto } from './dto/update-polaroid.dto';
 import { ObjectId } from 'bson';
+import { PolaroidMapper } from './polaroid.mapper';
 
 @Injectable()
 export class PolaroidService {
@@ -15,6 +16,7 @@ export class PolaroidService {
       Prisma.PolaroidCreateInput,
       Prisma.PolaroidUpdateInput
     >,
+    private readonly mapper: PolaroidMapper,
   ) {}
 
   async findAll(): Promise<Polaroid[]> {
@@ -22,13 +24,21 @@ export class PolaroidService {
   }
 
   async findOne(id: string): Promise<Polaroid | null> {
-    return this.polaroidRepository.findOne(id);
+    const found = await this.polaroidRepository.findOne(id);
+    if (!found) {
+      return null;
+    }
+    return this.mapper.toResponse(found);
   }
 
-  async create(dto: CreatePolaroidDto): Promise<Polaroid> {
+  async create(dto: CreatePolaroidDto, imageUrl: string): Promise<Polaroid> {
     const data: Prisma.PolaroidCreateInput = {
       id: new ObjectId().toString(),
-      ...dto,
+      position: (await this.polaroidRepository.count()) + 1,
+      isActive: true,
+      backContent: dto.backContent,
+      keyNumber: dto.keyNumber,
+      imageUrl,
     };
     return this.polaroidRepository.create(data);
   }

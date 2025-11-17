@@ -11,6 +11,7 @@ export interface PrismaModelDelegate<
   create(args: { data: CreateData }): Promise<Model>;
   update(args: { where: WhereUnique; data: UpdateData }): Promise<Model>;
   delete(args: { where: WhereUnique }): Promise<Model>;
+  count(): Promise<number>;
 }
 
 export class PrismaRepository<Model, WhereUnique, CreateData, UpdateData>
@@ -46,5 +47,9 @@ export class PrismaRepository<Model, WhereUnique, CreateData, UpdateData>
 
   delete(where: WhereUnique): Promise<Model> {
     return this.delegate.delete({ where });
+  }
+
+  count(): Promise<number> {
+    return this.delegate.count();
   }
 }

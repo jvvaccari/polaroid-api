@@ -4,4 +4,5 @@ export interface IRepository<Model, Where, CreateData, UpdateData> {
   create(data: CreateData): Promise<Model>;
   update(where: Where, data: UpdateData): Promise<Model>;
   delete(where: Where): Promise<Model>;
+  count(): Promise<number>;
 }

@@ -1,9 +1,36 @@
-import { Controller, Get, Param, Post, Put, Body } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Body,
+  BadRequestException,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiConsumes,
+  ApiBody,
+} from '@nestjs/swagger';
 import { PolaroidService } from './polaroid.service';
 import { CreatePolaroidDto } from './dto/create-polaroid.dto';
 import { UpdatePolaroidDto } from './dto/update-polaroid.dto';
 import { PolaroidResponseDto } from './dto/polaroid-response.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { extname } from 'path';
+import { diskStorage } from 'multer';
+
+interface UploadedFileType {
+  filename: string;
+  originalname: string;
+  mimetype: string;
+  size: number;
+  path: string;
+}
 
 @ApiTags('polaroids')
 @Controller('polaroids')
@@ -33,10 +60,66 @@ export class PolaroidController {
   @Post()
   @ApiOperation({ summary: 'Criar um novo polaroid' })
   @ApiResponse({ status: 201, type: PolaroidResponseDto })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['image', 'backContent', 'keyNumber'],
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+          description: 'Arquivo de imagem (JPG, JPEG, PNG, GIF)',
+        },
+        backContent: {
+          type: 'string',
+          description: 'Conteúdo do verso do polaroid',
+          example: 'Minha lembrança especial',
+        },
+        keyNumber: {
+          type: 'number',
+          description: 'Número chave do polaroid',
+          example: 2,
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads/polaroids',
+        filename: (_req, file: { originalname: string }, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          cb(null, `polaroid-${uniqueSuffix}${ext}`);
+        },
+      }),
+      fileFilter: (_req, file: { mimetype: string }, cb) => {
+        if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+          cb(new BadRequestException('Apenas imagens são permitidas!'), false);
+          return;
+        }
+        cb(null, true);
+      },
+      limits: {
+        fileSize: 5 * 1024 * 1024,
+      },
+    }),
+  )
   async create(
+    @UploadedFile() file: UploadedFileType | undefined,
     @Body() createPolaroidDto: CreatePolaroidDto,
   ): Promise<PolaroidResponseDto> {
-    const polaroid = await this.polaroidService.create(createPolaroidDto);
+    if (!file?.filename) {
+      throw new BadRequestException('Imagem é obrigatória');
+    }
+
+    const imageUrl = `/uploads/polaroids/${file.filename}`;
+    const polaroid = await this.polaroidService.create(
+      createPolaroidDto,
+      imageUrl,
+    );
     return new PolaroidResponseDto(polaroid);
   }
 

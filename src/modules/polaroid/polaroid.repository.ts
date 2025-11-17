@@ -44,4 +44,8 @@ export class PolaroidRepository
   async delete(id: string): Promise<Polaroid> {
     return this.inner.delete({ id });
   }
+
+  async count(): Promise<number> {
+    return this.inner.count();
+  }
 }

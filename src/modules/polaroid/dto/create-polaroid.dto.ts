@@ -1,37 +1,22 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsOptional,
-  IsInt,
-  IsBoolean,
-} from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, IsInt } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class CreatePolaroidDto {
-  @ApiProperty({ description: 'URL da imagem' })
-  @IsString()
-  @IsNotEmpty()
-  imageUrl: string;
-
-  @ApiProperty({ description: 'Conteúdo do verso do polaroid' })
+  @ApiProperty({
+    description: 'Conteúdo do verso do polaroid',
+    example: 'Minha lembrança especial',
+  })
   @IsString()
   @IsNotEmpty()
   backContent: string;
 
-  @ApiProperty({ description: 'Número chave do polaroid' })
+  @ApiProperty({
+    description: 'Número chave do polaroid',
+    example: 2,
+    type: Number,
+  })
+  @Type(() => Number)
   @IsInt()
   keyNumber: number;
-
-  @ApiPropertyOptional({ description: 'Posição do polaroid' })
-  @IsInt()
-  @IsOptional()
-  position?: number;
-
-  @ApiPropertyOptional({
-    description: 'Se o polaroid está ativo',
-    default: true,
-  })
-  @IsBoolean()
-  @IsOptional()
-  isActive?: boolean;
 }
