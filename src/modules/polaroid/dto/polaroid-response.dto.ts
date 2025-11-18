@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsInt } from 'class-validator';
+import { Polaroid } from '@prisma/client';
 
 export class PolaroidResponseDto {
   @ApiProperty({ description: 'ID do polaroid' })
@@ -9,7 +10,7 @@ export class PolaroidResponseDto {
   imageUrl: string;
 
   @ApiProperty({ description: 'Conteúdo do verso do polaroid' })
-  backContent: string;
+  backContent: string | null;
 
   @ApiProperty({
     description: 'Número chave do polaroid',
@@ -39,7 +40,7 @@ export class PolaroidResponseDto {
   @ApiProperty({ description: 'Data de atualização' })
   updatedAt: Date;
 
-  constructor(partial: Partial<PolaroidResponseDto>) {
+  constructor(partial: Partial<Polaroid>) {
     Object.assign(this, partial);
   }
 }

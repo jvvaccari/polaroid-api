@@ -10,7 +10,7 @@ datasource db {
 model Polaroid {
   id              String           @id @map("_id") @db.ObjectId
   imageUrl        String
-  backContent     String
+  backContent     String?
   keyNumber       Int?
   position        Int?             @unique
   isActive        Boolean          @default(true)

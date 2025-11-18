@@ -35,7 +35,7 @@ interface UploadedFileType {
 @ApiTags('polaroids')
 @Controller('polaroids')
 export class PolaroidController {
-  constructor(private readonly polaroidService: PolaroidService) {}
+  constructor(private readonly polaroidService: PolaroidService) { }
 
   @Get()
   @ApiOperation({ summary: 'Listar todos os polaroids' })
@@ -127,6 +127,53 @@ export class PolaroidController {
   @ApiOperation({ summary: 'Atualizar um polaroid' })
   @ApiResponse({ status: 200, type: PolaroidResponseDto })
   @ApiResponse({ status: 404, description: 'Polaroid não encontrado' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['image', 'backContent', 'keyNumber'],
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+          description: 'Arquivo de imagem (JPG, JPEG, PNG, GIF)',
+        },
+        backContent: {
+          type: 'string',
+          description: 'Conteúdo do verso do polaroid',
+          example: 'Minha lembrança especial',
+        },
+        keyNumber: {
+          type: 'number',
+          description: 'Número chave do polaroid',
+          example: 2,
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads/polaroids',
+        filename: (_req, file: { originalname: string }, cb) => {
+          const uniqueSuffix =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          cb(null, `polaroid-${uniqueSuffix}${ext}`);
+        },
+      }),
+      fileFilter: (_req, file: { mimetype: string }, cb) => {
+        if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+          cb(new BadRequestException('Apenas imagens são permitidas!'), false);
+          return;
+        }
+        cb(null, true);
+      },
+      limits: {
+        fileSize: 5 * 1024 * 1024,
+      },
+    }),
+  )
   async update(
     @Param('id') id: string,
     @Body() updatePolaroidDto: UpdatePolaroidDto,

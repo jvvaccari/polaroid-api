@@ -6,10 +6,11 @@ export class CreatePolaroidDto {
   @ApiProperty({
     description: 'Conteúdo do verso do polaroid',
     example: 'Minha lembrança especial',
+    type: String,
   })
   @IsString()
-  @IsNotEmpty()
-  backContent: string;
+  @IsOptional()
+  backContent: string | null;
 
   @ApiProperty({
     description: 'Número chave do polaroid',
