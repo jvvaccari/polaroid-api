@@ -17,6 +17,18 @@ export class DailyChallengeController {
         return challenges.map((c) => new DailyChallengeResponseDto(c));
     }
 
+    @Get('by-date')
+    @ApiOperation({ summary: 'Listar um desafio diário pela data' })
+    async findByDate(): Promise<DailyChallengeResponseDto | null> {
+        const challenge = await this.dailyChallengeService.findByDate();
+
+        if (!challenge) {
+            throw new Error(`Desafio diário não encontrado`);
+        }
+
+        return new DailyChallengeResponseDto(challenge);
+    }
+
     @Get(':id')
     @ApiOperation({ summary: 'Listar um desafio diário pelo ID' })
     async findOne(@Param('id') id: string) {
@@ -32,7 +44,7 @@ export class DailyChallengeController {
     @Post()
     @ApiOperation({ summary: 'Criar um novo desafio diário' })
     async create(@Body() createDailyChallengeDto: CreateDailyChallengeDto
-    ) : Promise<DailyChallengeResponseDto> {
+    ): Promise<DailyChallengeResponseDto> {
         const challenge = await this.dailyChallengeService.create(createDailyChallengeDto);
         return new DailyChallengeResponseDto(challenge);
     }

@@ -27,6 +27,21 @@ export class DailyChallengeRepository
         return this.inner.findOne({ id });
     }
 
+
+    async findByDate(startDate: string, endDate: string): Promise<DailyChallenge | null> {
+        return this.inner.findFirst({
+            where: {
+                date: {
+                    gte: new Date(startDate),
+                    lte: new Date(endDate)
+                }
+            },
+            include: {
+                polaroid: true
+            }
+        });
+    }
+
     async create(data: Prisma.DailyChallengeCreateInput): Promise<DailyChallenge> {
         return this.inner.create(data);
     }

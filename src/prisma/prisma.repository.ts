@@ -7,6 +7,7 @@ export interface PrismaModelDelegate<
   UpdateData,
 > {
   findMany?(): Promise<Model[]>;
+  findFirst?(args?: any): Promise<Model | null>;
   findUnique(args: { where: WhereUnique }): Promise<Model | null>;
   create(args: { data: CreateData }): Promise<Model>;
   update(args: { where: WhereUnique; data: UpdateData }): Promise<Model>;
@@ -15,8 +16,7 @@ export interface PrismaModelDelegate<
 }
 
 export class PrismaRepository<Model, WhereUnique, CreateData, UpdateData>
-  implements IRepository<Model, WhereUnique, CreateData, UpdateData>
-{
+  implements IRepository<Model, WhereUnique, CreateData, UpdateData> {
   constructor(
     private readonly delegate: PrismaModelDelegate<
       Model,
@@ -24,7 +24,7 @@ export class PrismaRepository<Model, WhereUnique, CreateData, UpdateData>
       CreateData,
       UpdateData
     >,
-  ) {}
+  ) { }
 
   findAll(): Promise<Model[]> {
     if (!this.delegate.findMany) {
@@ -51,5 +51,12 @@ export class PrismaRepository<Model, WhereUnique, CreateData, UpdateData>
 
   count(): Promise<number> {
     return this.delegate.count();
+  }
+
+  findFirst(args?: any): Promise<Model | null> {
+    if (!this.delegate.findFirst) {
+      throw new Error('findFirst method is not implemented in the delegate');
+    }
+    return this.delegate.findFirst(args);
   }
 }
