@@ -26,9 +26,6 @@ model DailyChallenge {
   date        DateTime  @unique
   polaroid    Polaroid  @relation(fields: [polaroidId], references: [id])
   polaroidId  String    @db.ObjectId
-  isCompleted Boolean   @default(false)
-  completedAt DateTime?
-  attempts    Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 

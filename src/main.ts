@@ -21,7 +21,7 @@ async function bootstrap() {
     }),
   );
 
-  // Servir arquivos estáticos da pasta uploads
+  // Servir arquivos estáticos da pasta uplokeyNumberads
   app.useStaticAssets(join(process.cwd(), 'uploads'), {
     prefix: '/uploads/',
   });

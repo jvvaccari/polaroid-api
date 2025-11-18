@@ -3,8 +3,8 @@ import { Polaroid, Prisma } from '@prisma/client';
 import type { IRepository } from 'src/common/interface.repository';
 import { CreatePolaroidDto } from './dto/create-polaroid.dto';
 import { UpdatePolaroidDto } from './dto/update-polaroid.dto';
-import { ObjectId } from 'bson';
 import { PolaroidMapper } from './polaroid.mapper';
+import { createID } from 'src/utils/createID';
 
 @Injectable()
 export class PolaroidService {
@@ -17,7 +17,7 @@ export class PolaroidService {
       Prisma.PolaroidUpdateInput
     >,
     private readonly mapper: PolaroidMapper,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Polaroid[]> {
     const polaroids = await this.polaroidRepository.findAll();
@@ -33,9 +33,12 @@ export class PolaroidService {
   }
 
   async create(dto: CreatePolaroidDto, imageUrl: string): Promise<Polaroid> {
+    const currentCount = this.polaroidRepository.count
+      ? await this.polaroidRepository.count()
+      : 0;
     const data: Prisma.PolaroidCreateInput = {
-      id: new ObjectId().toString(),
-      position: (await this.polaroidRepository.count()) + 1,
+      id: createID(),
+      position: currentCount + 1,
       isActive: true,
       backContent: dto.backContent || '',
       keyNumber: dto.keyNumber || 0,
