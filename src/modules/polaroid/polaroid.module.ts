@@ -26,6 +26,6 @@ import { PolaroidMapper } from './polaroid.mapper';
     },
     PolaroidService,
   ],
-  exports: [PolaroidService],
+  exports: [PolaroidService, PolaroidMapper],
 })
-export class PolaroidModule {}
+export class PolaroidModule { }

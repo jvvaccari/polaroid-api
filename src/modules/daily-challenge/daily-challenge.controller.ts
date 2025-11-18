@@ -4,11 +4,16 @@ import { DailyChallengeService } from "./daily-challenge.service";
 import { DailyChallengeResponseDto } from "./dto/daily-challenge-response.dto";
 import { CreateDailyChallengeDto } from "./dto/create-daily-challenge.dto";
 import { UpdateDailyChallengeDto } from "./dto/update-daily-challenge.dto";
+import { PolaroidMapper } from "../polaroid/polaroid.mapper";
 
 @ApiTags('daily-challenges')
 @Controller('daily-challenges')
 export class DailyChallengeController {
-    constructor(private readonly dailyChallengeService: DailyChallengeService) { }
+    constructor(
+        private readonly dailyChallengeService: DailyChallengeService,
+        private readonly polaroidMapper: PolaroidMapper
+    ) { }
+
 
     @Get()
     @ApiOperation({ summary: 'Listar todos os desafios diários' })
@@ -26,7 +31,10 @@ export class DailyChallengeController {
             throw new Error(`Desafio diário não encontrado`);
         }
 
-        return new DailyChallengeResponseDto(challenge);
+        return new DailyChallengeResponseDto({
+            ...challenge,
+            polaroid: this.polaroidMapper.toResponse(challenge.polaroid)
+        });
     }
 
     @Get(':id')

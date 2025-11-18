@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { DailyChallenge } from "@prisma/client";
-import { IsBoolean, isBoolean, IsString } from "class-validator";
+import { DailyChallenge, Polaroid } from "@prisma/client";
+import { IsString } from "class-validator";
+import { PolaroidResponseDto } from "../../polaroid/dto/polaroid-response.dto";
 
 export class DailyChallengeResponseDto {
     @ApiProperty({
@@ -19,13 +20,20 @@ export class DailyChallengeResponseDto {
     @IsString()
     polaroidId: string;
 
+    @ApiProperty({
+        description: 'Polaroid associado ao desafio diário',
+        type: () => PolaroidResponseDto,
+        required: false
+    })
+    polaroid?: PolaroidResponseDto;
+
     @ApiProperty({ description: 'Data de criação' })
     createdAt: Date;
 
     @ApiProperty({ description: 'Data de atualização' })
     updatedAt: Date;
 
-    constructor(partial: Partial<DailyChallenge>) {
+    constructor(partial: Partial<DailyChallenge> & { polaroid?: Polaroid | PolaroidResponseDto }) {
         Object.assign(this, partial);
     }
 }

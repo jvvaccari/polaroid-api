@@ -1,9 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { DailyChallenge, Prisma } from "@prisma/client";
+import { DailyChallenge, Polaroid, Prisma } from "@prisma/client";
 import type { IRepository } from "src/common/interface.repository";
 import { CreateDailyChallengeDto } from "./dto/create-daily-challenge.dto";
 import { createID } from "src/utils/createID";
 import { createDate } from "src/utils/createDate";
+
+type DailyChallengeWithPolaroid = DailyChallenge & { polaroid: Polaroid };
 
 @Injectable()
 export class DailyChallengeService {
@@ -18,14 +20,14 @@ export class DailyChallengeService {
     ) { }
 
     async findAll(): Promise<DailyChallenge[]> {
-        return this.dailyChallengeRepository.findAll();
+        return this.dailyChallengeRepository.findAll() as Promise<DailyChallenge[]>;
     }
 
     async findOne(id: string): Promise<DailyChallenge | null> {
-        return this.dailyChallengeRepository.findOne(id);
+        return this.dailyChallengeRepository.findOne(id) as Promise<DailyChallenge | null>;
     }
 
-    async findByDate(): Promise<DailyChallenge | null> {
+    async findByDate(): Promise<DailyChallengeWithPolaroid | null> {
         const currentDate = new Date();
 
         // Criar data UTC para início do dia (00:00:00)
@@ -44,14 +46,11 @@ export class DailyChallengeService {
             23, 59, 59, 999
         ));
 
-        console.log('Finding daily challenge between:', startOfDay.toISOString(), 'and', endOfDay.toISOString());
-
         const res = this.dailyChallengeRepository.findByDate
             ? await this.dailyChallengeRepository.findByDate(startOfDay.toISOString(), endOfDay.toISOString())
             : null;
 
-        console.log('Found daily challenge:', res);
-        return res;
+        return res as DailyChallengeWithPolaroid | null;
     }
 
     async create(createDailyChallengeDto: CreateDailyChallengeDto) {

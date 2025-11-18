@@ -5,9 +5,10 @@ import { DailyChallengeService } from './daily-challenge.service';
 import { DailyChallengeRepository } from './daily-challenge.repository';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PrismaRepository } from 'src/prisma/prisma.repository';
+import { PolaroidModule } from '../polaroid/polaroid.module'; // Importar o módulo
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, PolaroidModule], // Adicionar aqui
   controllers: [DailyChallengeController],
   providers: [
     {
