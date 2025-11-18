@@ -176,9 +176,19 @@ export class PolaroidController {
   )
   async update(
     @Param('id') id: string,
+    @UploadedFile() file: UploadedFileType | undefined,
     @Body() updatePolaroidDto: UpdatePolaroidDto,
   ): Promise<PolaroidResponseDto> {
-    const polaroid = await this.polaroidService.update(id, updatePolaroidDto);
+    if (!file?.filename) {
+      throw new BadRequestException('Imagem é obrigatória');
+    }
+
+    const imageUrl = `/uploads/polaroids/${file.filename}`;
+    const polaroid = await this.polaroidService.update(
+      id,
+      updatePolaroidDto,
+      imageUrl
+    );
     return new PolaroidResponseDto(polaroid);
   }
 }

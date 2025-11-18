@@ -47,8 +47,8 @@ export class PolaroidService {
     return this.polaroidRepository.create(data);
   }
 
-  async update(id: string, dto: UpdatePolaroidDto): Promise<Polaroid> {
-    const data: Prisma.PolaroidUpdateInput = { ...dto };
+  async update(id: string, dto: UpdatePolaroidDto, imageUrl: string): Promise<Polaroid> {
+    const data: Prisma.PolaroidUpdateInput = { ...dto, imageUrl };
     console.log('Updating polaroid with data:', data);
     return this.polaroidRepository.update(id, data);
   }
