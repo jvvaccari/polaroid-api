@@ -53,3 +53,18 @@ Acessar documentação Swagger:
 Subindo o schema para o mongodb Atlas:
 
     npx prisma db push
+
+Fluxo de Adição de Novos Serviços no NestJS
+A ordem recomendada é:
+
+1. DTO (Data Transfer Object) - Se necessário
+Defina os dados de entrada/saída
+
+2. Repository
+Adicione os métodos de acesso aos dados
+
+3. Service
+Implemente a lógica de negócio
+
+4. Controller
+Exponha os endpoints HTTP
