@@ -4,7 +4,7 @@ services:
     container_name: mongodb_polaroid
     restart: always
     env_file:
-      - ./polaroid-api/.env
+      - ./.env
     ports:
       - "27017:27017"
     healthcheck:
@@ -23,7 +23,7 @@ services:
       db:
         condition: service_healthy
     env_file:
-      - ./polaroid-api/.env
+      - ./.env
     ports:
       - "3001:3001"
     volumes:
