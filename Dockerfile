@@ -5,7 +5,7 @@ WORKDIR /api
 
 # copie apenas package files e instale (permitir gerar prisma)
 COPY package*.json ./
-RUN npm install --no-audit --no-fund
+RUN npm install
 
 # copie o schema do prisma e gere o client
 COPY prisma ./prisma
