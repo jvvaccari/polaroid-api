@@ -1,0 +1,33 @@
+services:
+  db:
+    image: mongo:7.0
+    container_name: mongodb_polaroid
+    restart: always
+    env_file:
+      - ./polaroid-api/.env
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - mongodb_data:/data/db
+
+  api:
+    build: ./polaroid-api
+    container_name: polaroid_api
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./polaroid-api/.env
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./polaroid-api/uploads:/api/uploads
+
+volumes:
+  mongodb_data:
