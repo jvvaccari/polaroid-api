@@ -16,7 +16,7 @@ services:
       - mongodb_data:/data/db
 
   api:
-    build: ./polaroid-api
+    build: .
     container_name: polaroid_api
     restart: always
     depends_on:
@@ -27,7 +27,7 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - ./polaroid-api/uploads:/api/uploads
+      - ./uploads:/api/uploads
 
 volumes:
   mongodb_data:
