@@ -13,14 +13,17 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors({
-    origin: [
-      'http://localhost',
-      'http://localhost:80',
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'http://localhost:5173',
-      'http://localhost:5174',
-    ],
+    origin: (origin, callback) => {
+      const allowed = [
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'http://ec2-98-93-227-63.compute-1.amazonaws.com:8080' // front URL exata (sem /)
+        // adicione aqui outros hosts confiáveis, ex: 'http://ec2-54-90-118-168.compute-1.amazonaws.com:3001'
+      ];
+      // Permite requests sem origin (curl, servidores) e origin na lista
+      if (!origin || allowed.includes(origin)) return callback(null, true);
+      return callback(new Error('CORS Rejected'));
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
