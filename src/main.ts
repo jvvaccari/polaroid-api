@@ -20,7 +20,6 @@ async function bootstrap() {
       'http://localhost:3001',
       'http://localhost:5173',
       'http://localhost:5174',
-      'http://ec2-54-90-118-168.compute-1.amazonaws.com:3001'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
@@ -46,6 +45,7 @@ async function bootstrap() {
     .setVersion('1.0.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
+  
   // Mantém a documentação sob o mesmo prefixo: /docs
   SwaggerModule.setup('docs', app, document);
 
