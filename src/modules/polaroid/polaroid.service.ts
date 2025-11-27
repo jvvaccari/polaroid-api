@@ -4,7 +4,7 @@ import type { IRepository } from 'src/common/interface.repository';
 import { CreatePolaroidDto } from './dto/create-polaroid.dto';
 import { UpdatePolaroidDto } from './dto/update-polaroid.dto';
 import { PolaroidMapper } from './polaroid.mapper';
-import { createID } from 'src/utils/createID';
+import { createID } from '../../utils/createID';
 
 @Injectable()
 export class PolaroidService {
