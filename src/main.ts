@@ -46,7 +46,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
 
-  // Mantém a documentação sob o mesmo prefixo: /docs
   SwaggerModule.setup('docs', app, document);
 
   const expressApp = app.getHttpAdapter().getInstance();
