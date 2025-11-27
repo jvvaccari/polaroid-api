@@ -17,11 +17,11 @@ export class PolaroidService {
       Prisma.PolaroidUpdateInput
     >,
     private readonly mapper: PolaroidMapper,
-  ) { }
+  ) {}
 
   async findAll(): Promise<Polaroid[]> {
     const polaroids = await this.polaroidRepository.findAll();
-    return polaroids.map(polaroid => this.mapper.toResponse(polaroid));
+    return polaroids.map((polaroid) => this.mapper.toResponse(polaroid));
   }
 
   async findOne(id: string): Promise<Polaroid | null> {
@@ -47,7 +47,11 @@ export class PolaroidService {
     return this.polaroidRepository.create(data);
   }
 
-  async update(id: string, dto: UpdatePolaroidDto, imageUrl: string): Promise<Polaroid> {
+  async update(
+    id: string,
+    dto: UpdatePolaroidDto,
+    imageUrl: string,
+  ): Promise<Polaroid> {
     const data: Prisma.PolaroidUpdateInput = { ...dto, imageUrl };
     console.log('Updating polaroid with data:', data);
     return this.polaroidRepository.update(id, data);

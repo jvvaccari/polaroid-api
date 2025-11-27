@@ -27,4 +27,4 @@ import { PolaroidModule } from '../polaroid/polaroid.module';
   ],
   exports: [DailyChallengeService],
 })
-export class DailyChallengeModule { }
+export class DailyChallengeModule {}

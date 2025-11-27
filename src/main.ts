@@ -16,10 +16,9 @@ async function bootstrap() {
     origin: [
       'http://localhost',
       'http://localhost:80',
-      'http://localhost:3000',
-      'http://localhost:3001',
       'http://localhost:5173',
       'http://localhost:5174',
+      'https://main.d220l2ccf6vick.amplifyapp.com/',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,

@@ -35,7 +35,7 @@ interface UploadedFileType {
 @ApiTags('polaroids')
 @Controller('polaroids')
 export class PolaroidController {
-  constructor(private readonly polaroidService: PolaroidService) { }
+  constructor(private readonly polaroidService: PolaroidService) {}
 
   @Get()
   @ApiOperation({ summary: 'Listar todos os polaroids' })
@@ -187,7 +187,7 @@ export class PolaroidController {
     const polaroid = await this.polaroidService.update(
       id,
       updatePolaroidDto,
-      imageUrl
+      imageUrl,
     );
     return new PolaroidResponseDto(polaroid);
   }

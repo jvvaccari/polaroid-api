@@ -1,73 +1,94 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { DailyChallenge, Polaroid, Prisma } from "@prisma/client";
-import type { IRepository } from "src/common/interface.repository";
-import { CreateDailyChallengeDto } from "./dto/create-daily-challenge.dto";
-import { createID } from "src/utils/createID";
-import { createDate } from "src/utils/createDate";
+import { Inject, Injectable } from '@nestjs/common';
+import { DailyChallenge, Polaroid, Prisma } from '@prisma/client';
+import type { IRepository } from 'src/common/interface.repository';
+import { CreateDailyChallengeDto } from './dto/create-daily-challenge.dto';
+import { createID } from 'src/utils/createID';
+import { createDate } from 'src/utils/createDate';
 
 type DailyChallengeWithPolaroid = DailyChallenge & { polaroid: Polaroid };
 
 @Injectable()
 export class DailyChallengeService {
-    constructor(
-        @Inject('IRepository')
-        private readonly dailyChallengeRepository: IRepository<
-            DailyChallenge,
-            string,
-            Prisma.DailyChallengeCreateInput,
-            Prisma.DailyChallengeUpdateInput
-        >,
-    ) { }
+  constructor(
+    @Inject('IRepository')
+    private readonly dailyChallengeRepository: IRepository<
+      DailyChallenge,
+      string,
+      Prisma.DailyChallengeCreateInput,
+      Prisma.DailyChallengeUpdateInput
+    >,
+  ) {}
 
-    async findAll(): Promise<DailyChallenge[]> {
-        return this.dailyChallengeRepository.findAll() as Promise<DailyChallenge[]>;
-    }
+  async findAll(): Promise<DailyChallenge[]> {
+    return this.dailyChallengeRepository.findAll() as Promise<DailyChallenge[]>;
+  }
 
-    async findOne(id: string): Promise<DailyChallenge | null> {
-        return this.dailyChallengeRepository.findOne(id) as Promise<DailyChallenge | null>;
-    }
+  async findOne(id: string): Promise<DailyChallenge | null> {
+    return this.dailyChallengeRepository.findOne(
+      id,
+    ) as Promise<DailyChallenge | null>;
+  }
 
-    async findByDate(): Promise<DailyChallengeWithPolaroid | null> {
-        const currentDate = new Date();
+  async findByDate(): Promise<DailyChallengeWithPolaroid | null> {
+    const currentDate = new Date();
 
-        // Criar data UTC para início do dia (00:00:00)
-        const startOfDay = new Date(Date.UTC(
-            currentDate.getUTCFullYear(),
-            currentDate.getUTCMonth(),
-            currentDate.getUTCDate(),
-            0, 0, 0, 0
-        ));
+    // Criar data UTC para início do dia (00:00:00)
+    const startOfDay = new Date(
+      Date.UTC(
+        currentDate.getUTCFullYear(),
+        currentDate.getUTCMonth(),
+        currentDate.getUTCDate(),
+        0,
+        0,
+        0,
+        0,
+      ),
+    );
 
-        // Criar data UTC para fim do dia (23:59:59.999)
-        const endOfDay = new Date(Date.UTC(
-            currentDate.getUTCFullYear(),
-            currentDate.getUTCMonth(),
-            currentDate.getUTCDate(),
-            23, 59, 59, 999
-        ));
+    // Criar data UTC para fim do dia (23:59:59.999)
+    const endOfDay = new Date(
+      Date.UTC(
+        currentDate.getUTCFullYear(),
+        currentDate.getUTCMonth(),
+        currentDate.getUTCDate(),
+        23,
+        59,
+        59,
+        999,
+      ),
+    );
 
-        const res = this.dailyChallengeRepository.findByDate
-            ? await this.dailyChallengeRepository.findByDate(startOfDay.toISOString(), endOfDay.toISOString())
-            : null;
+    const res = this.dailyChallengeRepository.findByDate
+      ? await this.dailyChallengeRepository.findByDate(
+          startOfDay.toISOString(),
+          endOfDay.toISOString(),
+        )
+      : null;
 
-        return res as DailyChallengeWithPolaroid | null;
-    }
+    return res as DailyChallengeWithPolaroid | null;
+  }
 
-    async create(createDailyChallengeDto: CreateDailyChallengeDto) {
-        return this.dailyChallengeRepository.create({
-            id: createID(),
-            date: createDate(createDailyChallengeDto.date),
-            polaroid: {
-                connect: { id: createDailyChallengeDto.polaroidId }
-            }
-        } as Prisma.DailyChallengeCreateInput);
-    }
+  async create(createDailyChallengeDto: CreateDailyChallengeDto) {
+    return this.dailyChallengeRepository.create({
+      id: createID(),
+      date: createDate(createDailyChallengeDto.date),
+      polaroid: {
+        connect: { id: createDailyChallengeDto.polaroidId },
+      },
+    } as Prisma.DailyChallengeCreateInput);
+  }
 
-    async update(id: string, data: Prisma.DailyChallengeUpdateInput): Promise<DailyChallenge> {
-        return this.dailyChallengeRepository.update(id, { ...data, date: data.date ? createDate(data.date.toString()) : undefined });
-    }
+  async update(
+    id: string,
+    data: Prisma.DailyChallengeUpdateInput,
+  ): Promise<DailyChallenge> {
+    return this.dailyChallengeRepository.update(id, {
+      ...data,
+      date: data.date ? createDate(data.date.toString()) : undefined,
+    });
+  }
 
-    async delete(id: string): Promise<DailyChallenge> {
-        return this.dailyChallengeRepository.delete(id);
-    }
+  async delete(id: string): Promise<DailyChallenge> {
+    return this.dailyChallengeRepository.delete(id);
+  }
 }
