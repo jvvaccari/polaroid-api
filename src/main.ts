@@ -45,9 +45,14 @@ async function bootstrap() {
     .setVersion('1.0.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  
+
   // Mantém a documentação sob o mesmo prefixo: /docs
   SwaggerModule.setup('docs', app, document);
+
+  const expressApp = app.getHttpAdapter().getInstance();
+  expressApp.get('/', (req, res) => {
+    res.json({ message: 'Polaroid API está rodando' });
+  });
 
   await app.listen(process.env.PORT ?? 3001);
 }
