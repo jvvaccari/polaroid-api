@@ -16,7 +16,8 @@ export interface PrismaModelDelegate<
 }
 
 export class PrismaRepository<Model, WhereUnique, CreateData, UpdateData>
-  implements IRepository<Model, WhereUnique, CreateData, UpdateData> {
+  implements IRepository<Model, WhereUnique, CreateData, UpdateData>
+{
   constructor(
     private readonly delegate: PrismaModelDelegate<
       Model,
@@ -24,7 +25,7 @@ export class PrismaRepository<Model, WhereUnique, CreateData, UpdateData>
       CreateData,
       UpdateData
     >,
-  ) { }
+  ) {}
 
   findAll(): Promise<Model[]> {
     if (!this.delegate.findMany) {

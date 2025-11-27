@@ -1,5 +1,5 @@
-import { ObjectId } from "bson";
+import { ObjectId } from 'bson';
 
 export const createID = (): string => {
-    return new ObjectId().toString();
-}
+  return new ObjectId().toString();
+};

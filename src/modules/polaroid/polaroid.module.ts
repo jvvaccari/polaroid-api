@@ -28,4 +28,4 @@ import { PolaroidMapper } from './polaroid.mapper';
   ],
   exports: [PolaroidService, PolaroidMapper],
 })
-export class PolaroidModule { }
+export class PolaroidModule {}
