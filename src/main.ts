@@ -12,12 +12,12 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.enableCors({
-    origin: ['https://main.d220l2ccf6vick.amplifyapp.com'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  });
+  // app.enableCors({
+  //   origin: ['https://main.d220l2ccf6vick.amplifyapp.com'],
+  //   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  //   credentials: true,
+  //   allowedHeaders: ['Content-Type', 'Authorization'],
+  // });
 
   app.useGlobalPipes(
     new ValidationPipe({
