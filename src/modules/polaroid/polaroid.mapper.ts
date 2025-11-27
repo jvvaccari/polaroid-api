@@ -10,7 +10,7 @@ export class PolaroidMapper {
   toResponse(p: Polaroid): PolaroidResponseDto {
     return {
       id: p.id,
-      imageUrl: `http://localhost:${process.env.PORT}` + p.imageUrl,
+      imageUrl: `${process.env.API_URL}` + p.imageUrl,
       backContent: p.backContent,
       keyNumber: p.keyNumber,
       position: p.position,
