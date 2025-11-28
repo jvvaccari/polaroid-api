@@ -40,7 +40,7 @@ export class PolaroidService {
       id: createID(),
       position: currentCount + 1,
       isActive: true,
-      backContent: dto.backContent || '',
+      backContent: dto.backContent ? dto.backContent.replace(/\\n/g, '\n') : '',
       keyNumber: dto.keyNumber || 0,
       imageUrl,
     };
@@ -49,11 +49,11 @@ export class PolaroidService {
 
   async update(
     id: string,
-    dto: UpdatePolaroidDto,
-    imageUrl: string,
+    data: UpdatePolaroidDto & { imageUrl?: string },
   ): Promise<Polaroid> {
-    const data: Prisma.PolaroidUpdateInput = { ...dto, imageUrl };
-    console.log('Updating polaroid with data:', data);
+    if (data.backContent) {
+      data.backContent = data.backContent.replace(/\\n/g, '\n');
+    }
     return this.polaroidRepository.update(id, data);
   }
 

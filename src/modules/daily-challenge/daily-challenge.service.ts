@@ -4,6 +4,7 @@ import type { IRepository } from 'src/common/interface.repository';
 import { CreateDailyChallengeDto } from './dto/create-daily-challenge.dto';
 import { createID } from 'src/utils/createID';
 import { createDate } from 'src/utils/createDate';
+import { UpdateDailyChallengeDto } from './dto/update-daily-challenge.dto';
 
 type DailyChallengeWithPolaroid = DailyChallenge & { polaroid: Polaroid };
 
@@ -20,42 +21,37 @@ export class DailyChallengeService {
   ) {}
 
   async findAll(): Promise<DailyChallenge[]> {
-    return this.dailyChallengeRepository.findAll() as Promise<DailyChallenge[]>;
+    return this.dailyChallengeRepository.findAll();
   }
 
   async findOne(id: string): Promise<DailyChallenge | null> {
-    return this.dailyChallengeRepository.findOne(
-      id,
-    ) as Promise<DailyChallenge | null>;
+    return this.dailyChallengeRepository.findOne(id);
   }
 
   async findByDate(): Promise<DailyChallengeWithPolaroid | null> {
     const currentDate = new Date();
 
-    // Criar data UTC para início do dia (00:00:00)
-    const startOfDay = new Date(
-      Date.UTC(
-        currentDate.getUTCFullYear(),
-        currentDate.getUTCMonth(),
-        currentDate.getUTCDate(),
-        0,
-        0,
-        0,
-        0,
-      ),
-    );
+    // Ajuste para o timezone do Brasil (GMT-3)
+    const timezoneOffset = -3 * 60; // minutos
+    const localDate = new Date(currentDate.getTime() + timezoneOffset * 60000);
 
-    // Criar data UTC para fim do dia (23:59:59.999)
+    const startOfDay = new Date(
+      localDate.getFullYear(),
+      localDate.getMonth(),
+      localDate.getDate(),
+      0,
+      0,
+      0,
+      0,
+    );
     const endOfDay = new Date(
-      Date.UTC(
-        currentDate.getUTCFullYear(),
-        currentDate.getUTCMonth(),
-        currentDate.getUTCDate(),
-        23,
-        59,
-        59,
-        999,
-      ),
+      localDate.getFullYear(),
+      localDate.getMonth(),
+      localDate.getDate(),
+      23,
+      59,
+      59,
+      999,
     );
 
     const res = this.dailyChallengeRepository.findByDate
@@ -80,11 +76,14 @@ export class DailyChallengeService {
 
   async update(
     id: string,
-    data: Prisma.DailyChallengeUpdateInput,
+    data: UpdateDailyChallengeDto,
   ): Promise<DailyChallenge> {
     return this.dailyChallengeRepository.update(id, {
       ...data,
-      date: data.date ? createDate(data.date.toString()) : undefined,
+      date:
+        data.date && (typeof data.date === 'string' || data.date)
+          ? createDate(data.date.toString())
+          : undefined,
     });
   }
 

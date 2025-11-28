@@ -131,7 +131,6 @@ export class PolaroidController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['image', 'backContent', 'keyNumber'],
       properties: {
         image: {
           type: 'string',
@@ -179,16 +178,15 @@ export class PolaroidController {
     @UploadedFile() file: UploadedFileType | undefined,
     @Body() updatePolaroidDto: UpdatePolaroidDto,
   ): Promise<PolaroidResponseDto> {
-    if (!file?.filename) {
-      throw new BadRequestException('Imagem é obrigatória');
+    const data: UpdatePolaroidDto & { imageUrl?: string } = {
+      ...updatePolaroidDto,
+    };
+
+    if (file?.filename) {
+      data.imageUrl = `/uploads/polaroids/${file.filename}`;
     }
 
-    const imageUrl = `/uploads/polaroids/${file.filename}`;
-    const polaroid = await this.polaroidService.update(
-      id,
-      updatePolaroidDto,
-      imageUrl,
-    );
+    const polaroid = await this.polaroidService.update(id, data);
     return new PolaroidResponseDto(polaroid);
   }
 }
