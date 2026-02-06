@@ -3,13 +3,12 @@ FROM node:latest
 
 WORKDIR /api
 
-# copie apenas package files e instale (permitir gerar prisma)
+# copie package files e schema do prisma primeiro
 COPY package*.json ./
-RUN npm install
-
-# copie o schema do prisma e gere o client
 COPY prisma ./prisma
-RUN npx prisma generate
+
+# instale dependências e gere o client do prisma
+RUN npm install
 
 # depois copie o resto do código e, se houver build, rode build
 COPY . .
