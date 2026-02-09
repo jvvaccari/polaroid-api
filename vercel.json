@@ -9,7 +9,20 @@
   "rewrites": [{ "source": "/(.*)", "destination": "/dist/src/main.js" }],
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/uploads/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET"
+        }
+      ]
+    },
+    {
+      "source": "/(?!uploads)(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
