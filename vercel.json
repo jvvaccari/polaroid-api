@@ -9,28 +9,21 @@
   "rewrites": [{ "source": "/(.*)", "destination": "/dist/src/main.js" }],
   "headers": [
     {
-      "source": "/uploads/(.*)",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "*"
+          "value": "https://main.d220l2ccf6vick.amplifyapp.com"
         },
         {
-          "key": "Access-Control-Allow-Methods", 
-          "value": "GET, HEAD, OPTIONS"
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET,POST,PUT,DELETE,OPTIONS"
         },
         {
           "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Accept, Origin, Authorization"
+          "value": "Content-Type, Authorization"
         },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000"
-        },
-        {
-          "key": "Vary",
-          "value": "Origin"
-        }
+        { "key": "Access-Control-Allow-Credentials", "value": "true" }
       ]
     }
   ]
