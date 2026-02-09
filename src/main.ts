@@ -17,8 +17,6 @@ async function bootstrap() {
     origin: [
       'https://main.d220l2ccf6vick.amplifyapp.com',
       'http://localhost:5173',
-      // Permitir acesso para html2pdf e outras ferramentas de renderização
-      '*',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
